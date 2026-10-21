@@ -7,7 +7,7 @@ import seaborn as sns
 from sklearn.datasets import make_blobs
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix
 
 # ---------------------------------------------------------
 # CONFIGURAÇÃO DA PÁGINA E ESTILO
@@ -25,15 +25,14 @@ com base no **Peso** e na **Espessura**.
 """)
 
 # ---------------------------------------------------------
-# GERACÃO DE DADOS SINTÉTICOS E TREINAMENTO DO MODELO
+# GERAÇÃO DE DADOS SINTÉTICOS E TREINAMENTO DO MODELO
 # ---------------------------------------------------------
 @st.cache_data
 def carregar_dados_e_modelo():
     # Classes: 0: Aprovada, 1: Retrabalho, 2: Refugo
-    # Centróides definidos para simular valores de peso (g) e espessura (mm)
     centers = [
         [150.0, 10.0],  # Aprovada (cerca de 150g, 10mm)
-        [158.0, 10.8],  # Retrabalho (pevemente acima da tolerância)
+        [158.0, 10.8],  # Retrabalho (levemente acima da tolerância)
         [170.0, 12.5]   # Refugo (muito acima das dimensões)
     ]
     
@@ -50,11 +49,11 @@ def carregar_dados_e_modelo():
     mapeamento = {0: 'Aprovada', 1: 'Retrabalho', 2: 'Refugo'}
     df['Status'] = [mapeamento[val] for val in y]
     
-    # Divisão em treino e teste
+    # CORREÇÃO AQUI: Substituído 'test_state' por 'random_state'
     X_train, X_test, y_train, y_test = train_test_split(
         df[['Peso_gramas', 'Espessura_mm']], 
         y, 
-        test_state=42, 
+        random_state=42, 
         test_size=0.25, 
         stratify=y
     )
